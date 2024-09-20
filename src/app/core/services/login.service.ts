@@ -9,21 +9,21 @@ import { map } from 'rxjs';
 export class LoginService {
 
   constructor(
-    private http:HttpClient
+    private http: HttpClient
   ) { }
 
   //Login function
-  login(formData:any) {
+  login(formData: any) {
     let headers: HttpHeaders = new HttpHeaders();
     headers.append('Content-Type', 'application/json');
     headers = headers.append('Accept', 'application/json');
     return this.http.post<any>(`${environment.apiUrl}login`, formData, {
       headers: headers
     })
-    .pipe(map((result: any) => {
+      .pipe(map((result: any) => {
         localStorage.setItem('currentUser', JSON.stringify(result.data));
-      return result;
-    }));
+        return result;
+      }));
   }
 
 }

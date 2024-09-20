@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { LoginService } from '../../core/services/login.service';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 
 @Component({
   selector: 'ovm-login',
@@ -12,30 +11,39 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
-  providers: [LoginService, HttpClient]
+  styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
   loginForm = this.fb.group({
-    email:['',[Validators.required, Validators.email]],
-    password:['',Validators.required]
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
   })
 
-  constructor(private loginService: LoginService, private fb: FormBuilder) { }
-  
-  get getValues(){
-    return this.loginForm.controls;
-  }
+  isFormSubmitted: boolean = false;
+
+ get f() { return this.loginForm.controls; }
+
+
+  private loginService = inject(LoginService)
+
+  constructor(private fb: FormBuilder, private router: Router) { }
 
   login() {
-    let formdata={
-      email:this.getValues.email.value,
-      password:this.getValues.password.value
+    this.isFormSubmitted = true;
+    if (this.loginForm.invalid) {
+      return;
+    } else {
+      let formdata = {
+        email: this.f.email.value,
+        password: this.f.password.value
+      }
+      this.loginService.login(formdata).subscribe(res => {
+        if (res.data) {
+          this.router.navigate(['/dashboard'])
+        }
+      })
     }
-    this.loginService.login(formdata).subscribe(res => {
-
-    })
   }
 
 }

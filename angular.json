@@ -26,10 +26,17 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              "src/favicon.ico", "src/assets"
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-spinner/animations/ball-scale-ripple.css",
+              "node_modules/ngx-spinner/animations/ball-spin.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": []
           },
